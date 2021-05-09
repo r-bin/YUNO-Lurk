@@ -1,18 +1,20 @@
 package org.yuno.apps.lurk.screens.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import org.yuno.apps.lurk.R
 import java.util.*
 import kotlin.concurrent.timerTask
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     private lateinit var adapter: RecyclerAdapter
 
@@ -24,7 +26,8 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,24 +35,18 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.editable_fragment, menu);
+        inflater.inflate(R.menu.editable_fragment, menu)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_settings -> {
-            // User chose the "Settings" item, show the app settings UI...
-
             val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
             NavHostFragment.findNavController(this).navigate(action)
 
             true
-        }
-
-        else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
+        } else -> {
             super.onOptionsItemSelected(item)
         }
     }
@@ -63,7 +60,6 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         // TODO: Use the ViewModel
 
         message = view?.findViewById<TextView>(R.id.message)!!
@@ -89,5 +85,4 @@ class MainFragment : Fragment() {
 
         Timer().schedule(timerTask { updateList() }, 5_000)
     }
-
 }
