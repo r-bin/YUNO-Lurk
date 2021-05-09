@@ -2,6 +2,7 @@ package org.yuno.apps.lurk.screens.main
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.yuno.apps.lurk.screens.main.model.Stream
@@ -12,15 +13,18 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.URLEncoder
-import java.util.function.Consumer
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val database: Database
+) : ViewModel() {
+
     var client = OkHttpClient.Builder().addInterceptor(Interceptor {
         Log.i("test", "intercepted")
 
         val newRequest = it.request().newBuilder()
-                .addHeader("Accept", "pplication/vnd.twitchtv.v5+json")
+                .addHeader("Accept", "application/vnd.twitchtv.v5+json")
                 .addHeader("Client-ID", "cagi684bmwa343s3un4tbfikqdog9r")
                 .build()
 
